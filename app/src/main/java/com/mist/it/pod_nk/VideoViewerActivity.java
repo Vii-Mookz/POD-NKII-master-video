@@ -41,15 +41,20 @@ public class VideoViewerActivity extends AppCompatActivity {
             videoView.setMediaController(mediaController);
         }
 
-        Uri videoLink = Uri.parse("http://service.eternity.co.th/dms_nk/app/centerservice/video/Video_2017-08-04_154919.wmv");
+        Uri videoLink = Uri.parse("http://service.eternity.co.th/dms_nk/app/centerservice/video/vdo.mp4");
         videoView.setVideoURI(videoLink);
 
         //set size screen
         DisplayMetrics metrics = new DisplayMetrics(); getWindowManager().getDefaultDisplay().getMetrics(metrics);
         android.widget.LinearLayout.LayoutParams params = (android.widget.LinearLayout.LayoutParams) videoView.getLayoutParams();
-        params.width =  metrics.widthPixels;
-        params.height = metrics.heightPixels;
+//        params.width =  metrics.widthPixels;
+//        params.height = metrics.heightPixels;
+//        params.leftMargin = 0;
+
+        params.width =  (int) (960*metrics.density);
+        params.height = (int) (560*metrics.density);
         params.leftMargin = 0;
+
         videoView.setLayoutParams(params);
 
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
