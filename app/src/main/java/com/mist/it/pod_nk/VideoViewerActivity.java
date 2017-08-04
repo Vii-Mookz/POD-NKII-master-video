@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import android.widget.MediaController;
 import android.widget.VideoView;
 
 import butterknife.BindView;
@@ -12,15 +14,32 @@ import butterknife.ButterKnife;
 
 public class VideoViewerActivity extends AppCompatActivity {
 
-
+    private String TAG;
+    private int stopPosition;
     @BindView(R.id.videoView)
     VideoView videoView;
+    MediaPlayer mp;
+    private MediaController mediaController;
+
+    private MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_viewer);
         ButterKnife.bind(this);
+
+        // Set the media controller buttons
+        if (mediaController == null) {
+            mediaController = new MediaController(VideoViewerActivity.this);
+
+            // Set the videoView that acts as the anchor for the MediaController.
+            mediaController.setAnchorView(videoView);
+
+
+            // Set MediaController for VideoView
+            videoView.setMediaController(mediaController);
+        }
 
         Uri videoLink = Uri.parse("http://service.eternity.co.th/dms_nk/app/centerservice/video/Video_2017-08-04_154919.wmv");
         videoView.setVideoURI(videoLink);
@@ -33,16 +52,33 @@ public class VideoViewerActivity extends AppCompatActivity {
         params.leftMargin = 0;
         videoView.setLayoutParams(params);
 
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener(){
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
 
             @Override
             public void onPrepared(MediaPlayer mp) {
                 mp.setLooping(true);
                 videoView.start();
+                mediaController.setAnchorView(videoView);
             }
+
 
         });
 
+
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mp != null){
+            mp.pause();
+        }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mp != null){
+            mp.start();
+        }
+    }
 }
